@@ -1,0 +1,57 @@
+﻿import:
+    - https://tangrams.github.io/refill-style/refill-style.yaml
+    - https://tangrams.github.io/blocks/functions/zoom.yaml
+    - https://tangrams.github.io/blocks/functions/aastep.yaml
+    - https://tangrams.github.io/blocks/generative/random.yaml
+
+sources:
+    opentraffic:
+        type: GeoJSON
+        url: assets/1-037-740.json
+
+textures:
+    palette:
+        url: assets/palette-01.png
+
+layers:
+    opentraffic:
+        data: { source: opentraffic }
+        draw:
+            ot-roads:
+                order: 10001
+                width: [[10,2px],[15,5px],[20,5m]]
+                color: |
+                    function () {
+                        return [ feature.speed/255, feature.drive_on_right, feature.oneway ]; 
+                    }
+
+styles:
+    ot-roads:
+        base: lines
+        mix: [functions-zoom, functions-aastep, generative-random]
+        texcoords: true
+        animated: true
+        lighting: false
+        blend: inlay
+        shaders:
+            defines:
+                ZOOM_START: 15.
+                ZOOM_END: 20.
+                ZOOM_IN: .0
+                ZOOM_OUT: .5
+            uniforms:
+                u_palette: palette
+            blocks:
+                width: |
+                    // One or two lanes
+                    width = mix(width*v_texcoord.x, width, a_color.b);
+                color: |
+                    // Speed to color from palette LUT 
+                    color = texture2D(u_palette, vec2(smoothstep(0.,.3,v_color.r),.5));
+
+                    // Draw arrows
+                    vec2 st = v_texcoord.xy+vec2(.5,0.);
+                    st.y -= u_time*10.*v_color.r;
+                    color.a *= aastep(zoom(),fract(st.y+abs(st.x*.5-.5)));
+
+
