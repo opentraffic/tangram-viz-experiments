@@ -24,11 +24,13 @@ When the map changes position...
     }, 1000));
 ```
 
+**Note:** the call is `debounce`d to avoid unnecessary multiple calls
+
 ### 2, 3 & 4. Request and load OpenTraffic data
 
 Get the bounding box and present time to construct a HTTP call to OpenTraffic.
 
-**NOTE:** the call have to be change to ask for a `year` of data instead of an `hour`... and the day for the average should be define to the actual day, to reduce the data. (Check all this with Kevin)
+**NOTE:** the call have to be change to ask for a `year` of data instead of an `hour`. Also the query should be made for only one day of the week (using `dow`) to reduce stream of data. (Check all this with Kevin)
 
 ```JS
 function update() {
