@@ -119,8 +119,15 @@ styles:
                 color: |
                     // Speed to color from palette LUT 
                     color = texture2D(u_palette, vec2(smoothstep(0.,.3,v_color.r),.5));
+
                     // Draw arrows
                     vec2 st = v_texcoord.xy+vec2(.5,0.);
+
+                    // Flip direction if the the drive is not on the right.
+                    st.y = mix(1.-fract(st.y),st.y,v_color.g);
+                    // Adjust the speed to the speed
                     st.y -= u_time*10.*v_color.r;
+
+                    // Make chrevone arrow
                     color.a *= aastep(zoom(),fract(st.y+abs(st.x*.5-.5)));
 ```
