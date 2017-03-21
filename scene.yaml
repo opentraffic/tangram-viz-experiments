@@ -46,78 +46,45 @@ layers:
         visible: global.sdk_traffic_overlay
         data: { source: opentraffic }
         draw:
-            lines:
-                order: 10001
-                width: [[10,2px],[15,5px],[20,5m]]
-                color: yellow
-
-        secondary:
-            filter: { best_frc: [secondary] }
-            draw:
-                lines:
-                    width: [[10, 0.5px], [12, 0.5px], [14, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
-            traffic_tier1_fast:
-                filter: global.traffic_tier1_fast_filter
-                draw:
-                    lines:
-                        #order: 10001
-                        color: global.traffic_tier1_fast_color
-            traffic_tier2_medium:
-                filter: global.traffic_tier2_medium_filter
-                draw:
-                    lines:
-                        #order: 10001
-                        color: global.traffic_tier2_medium_color
-            traffic_tier3_slow:
-                filter: global.traffic_tier3_slow_filter
-                draw:
-                    lines:
-                        # order: 10001
-                        color: global.traffic_tier3_slow_color
-            traffic_tier4_stop:
-                filter: global.traffic_tier4_stop_filter
-                draw:
-                    lines:
-                        # order: 10001
-                        color: global.traffic_tier4_stop_color
-
-
-        tertiary:
-            filter: { best_frc: [tertiary] }
-            draw:
-                lines:
-                    width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
-            traffic_tier1_fast:
-                filter: global.traffic_tier1_fast_filter
-                draw:
-                    lines:
-                        color: global.traffic_tier1_fast_color
-            traffic_tier2_medium:
-                filter: global.traffic_tier2_medium_filter
-                draw:
-                    lines:
-                        color: global.traffic_tier2_medium_color
-            traffic_tier3_slow:
-                filter: global.traffic_tier3_slow_filter
-                draw:
-                    lines:
-                        color: global.traffic_tier3_slow_color
-            traffic_tier4_stop:
-                filter: global.traffic_tier4_stop_filter
-                draw:
-                    lines:
-                        color: global.traffic_tier4_stop_color
-
-    opentraffic:
-        data: { source: opentraffic }
-        draw:
             ot-roads:
-                order: 10002
+                order: 10001
                 width: [[10,2px],[15,5px],[20,5m]]
                 color: |
                     function () {
                         return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
                     }
+
+        secondary:
+            filter: { best_frc: [secondary] }
+            draw:
+                ot-roads:
+                    width: [[10, 0.5px], [12, 0.5px], [14, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+                    color: |
+                        function () {
+                            return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+                        }
+
+
+        tertiary:
+            filter: { best_frc: [tertiary] }
+            draw:
+                ot-roads:
+                    width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+                    color: |
+                        function () {
+                            return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+                        }
+
+    # opentraffic:
+    #     data: { source: opentraffic }
+    #     draw:
+    #         ot-roads:
+    #             order: 10002
+    #             width: [[10,2px],[15,5px],[20,5m]]
+    #             color: |
+    #                 function () {
+    #                     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+    #                 }
 
 styles:
     ot-roads:
