@@ -17,13 +17,28 @@ scene:
     animated: true
 
 global:
+
     sdk_traffic_overlay: true
+
+    # COLORS
+    traffic_tier1_fast_color: green
+    traffic_tier2_medium_color: blue
+    traffic_tier3_slow_color: orange
+    traffic_tier4_stop_color: red
+
+    # FILTERS
     traffic_tier1_fast_filter:
         all:
             - function() { return speed >= 40; }
     traffic_tier2_medium_filter:
         all:
             - function() { return speed < 40; }
+    traffic_tier3_slow_filter:
+        all:
+            - function() { return speed < 20; }
+    traffic_tier4_stop_filter:
+        all:
+            - function() { return speed < 5; }
 
 layers:
 
@@ -38,45 +53,61 @@ layers:
 
         secondary:
             filter: { best_frc: [secondary] }
+            draw:
+                lines:
+                    width: [[10, 0.5px], [12, 0.5px], [14, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
             traffic_tier1_fast:
                 filter: global.traffic_tier1_fast_filter
                 draw:
                     lines:
                         #order: 10001
                         color: global.traffic_tier1_fast_color
-                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
             traffic_tier2_medium:
                 filter: global.traffic_tier2_medium_filter
                 draw:
                     lines:
                         #order: 10001
                         color: global.traffic_tier2_medium_color
-                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
             traffic_tier3_slow:
                 filter: global.traffic_tier3_slow_filter
                 draw:
                     lines:
                         # order: 10001
                         color: global.traffic_tier3_slow_color
-                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
             traffic_tier4_stop:
                 filter: global.traffic_tier4_stop_filter
                 draw:
                     lines:
                         # order: 10001
                         color: global.traffic_tier4_stop_color
-                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
 
 
         tertiary:
             filter: { best_frc: [tertiary] }
+            draw:
+                lines:
+                    width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
             traffic_tier1_fast:
                 filter: global.traffic_tier1_fast_filter
                 draw:
                     lines:
-                        order: 10001
-                        color: green
-                        width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+                        color: global.traffic_tier1_fast_color
+            traffic_tier2_medium:
+                filter: global.traffic_tier2_medium_filter
+                draw:
+                    lines:
+                        color: global.traffic_tier2_medium_color
+            traffic_tier3_slow:
+                filter: global.traffic_tier3_slow_filter
+                draw:
+                    lines:
+                        color: global.traffic_tier3_slow_color
+            traffic_tier4_stop:
+                filter: global.traffic_tier4_stop_filter
+                draw:
+                    lines:
+                        color: global.traffic_tier4_stop_color
+
 
 
 
