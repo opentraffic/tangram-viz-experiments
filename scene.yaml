@@ -124,7 +124,7 @@ layers:
 
 
 
-
+            # data source is not working here, so inherit from roads refill doesn't work
             # trunk_primary:
             #     opentraffic:
             #         data: { source: opentraffic }
