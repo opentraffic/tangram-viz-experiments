@@ -16,64 +16,143 @@ textures:
 scene:
     animated: true
 
+global:
+    sdk_traffic_overlay: true
+    traffic_tier1_fast_filter:
+        all:
+            - function() { return speed >= 40; }
+    traffic_tier2_medium_filter:
+        all:
+            - function() { return speed < 40; }
+
 layers:
 
-    roads:
+    _roads:
+        visible: global.sdk_traffic_overlay
+        data: { source: opentraffic }
+        draw:
+            lines:
+                order: 10001
+                width: [[10,2px],[15,5px],[20,5m]]
+                color: yellow
 
-        major_road:
+        secondary:
+            filter: { best_frc: [secondary] }
+            traffic_tier1_fast:
+                filter: global.traffic_tier1_fast_filter
+                draw:
+                    lines:
+                        #order: 10001
+                        color: global.traffic_tier1_fast_color
+                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
+            traffic_tier2_medium:
+                filter: global.traffic_tier2_medium_filter
+                draw:
+                    lines:
+                        #order: 10001
+                        color: global.traffic_tier2_medium_color
+                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
+            traffic_tier3_slow:
+                filter: global.traffic_tier3_slow_filter
+                draw:
+                    lines:
+                        # order: 10001
+                        color: global.traffic_tier3_slow_color
+                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
+            traffic_tier4_stop:
+                filter: global.traffic_tier4_stop_filter
+                draw:
+                    lines:
+                        # order: 10001
+                        color: global.traffic_tier4_stop_color
+                        width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
 
-            trunk_primary:
-                opentraffic:
-                    data: { source: opentraffic }
-                    draw:
-                        ot-roads:
-                            order: 10001
-                            ## these widths match roads refactor refill trunk primary
-                            width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
-                            color: |
-                                function () {
-                                    return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-                                }
 
-                routes:
-                    opentraffic:
-                        data: { source: opentraffic }
-                        draw:
-                            ot-roads:
-                                order: 10001
-                                ## these widths match roads refactor refill trunk primary routes
-                                width: [[9, 0.5px], [14, 1.25px], [15, 1.25px], [16, 2px], [17, 4px], [18, 6px], [20, 3m]]
-                                color: |
-                                    function () {
-                                        return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-                                    }
+        tertiary:
+            filter: { best_frc: [tertiary] }
+            traffic_tier1_fast:
+                filter: global.traffic_tier1_fast_filter
+                draw:
+                    lines:
+                        order: 10001
+                        color: green
+                        width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
 
 
-            secondary:
-                opentraffic:
-                    data: { source: opentraffic }
-                    draw:
-                        ot-roads:
-                            order: 10001
-                            ## these widths match roads refactor refill secondary
-                            width: [[10, 0.5px], [12, 0.5px], [14, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
-                            color: |
-                                function () {
-                                    return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-                                }
 
-            tertiary:
-                opentraffic:
-                    data: { source: opentraffic }
-                    draw:
-                        ot-roads:
-                            order: 10001
-                            ## these widths match roads refactor refill tertiary
-                            width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
-                            color: |
-                                function () {
-                                    return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-                                }
+    # opentraffic:
+    #     data: { source: opentraffic }
+    #     draw:
+    #         ot-roads:
+    #             order: 10001
+    #             width: [[10,2px],[15,5px],[20,5m]]
+    #             color: |
+    #                 function () {
+    #                     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+    #                 }
+
+
+
+
+            # trunk_primary:
+            #     opentraffic:
+            #         data: { source: opentraffic }
+            #         draw:
+            #             ot-roads:
+            #                 order: 10001 #430 #
+            #                 ## these widths match roads refactor refill trunk primary
+            #                 width: [[8, 0.5px], [11, 0.5px], [14, 1px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
+            #                 color: red #|
+            #                     # function () {
+            #                     #     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+            #                     # }
+
+            #     routes:
+            #         opentraffic:
+            #             data: { source: opentraffic }
+            #             draw:
+            #                 ot-roads:
+            #                     order: 10001 #430 #
+            #                     ## these widths match roads refactor refill trunk primary routes
+            #                     width: [[9, 0.5px], [14, 1.25px], [15, 1.25px], [16, 2px], [17, 4px], [18, 6px], [20, 3m]]
+            #                     color: blue #|
+            #                         # function () {
+            #                         #     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+            #                         # }
+
+
+            # secondary:
+            #     opentraffic:
+            #         data: { source: opentraffic }
+            #         draw:
+            #             ot-roads:
+            #                 order: 10001 #429 #
+            #                 ## these widths match roads refactor refill secondary
+            #                 width: [[10, 0.5px], [12, 0.5px], [14, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+            #                 color: green #|
+            #                     # function () {
+            #                     #     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+            #                     # }
+
+            # tertiary:
+            #     opentraffic:
+            #         data: { source: opentraffic }
+            #         draw:
+            #             ot-roads:
+            #                 order: 10001 #427 #
+            #                 ## these widths match roads refactor refill tertiary
+            #                 width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+            #                 color: yellow #|
+            #                     # function () {
+            #                     #     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+            #                     # }
+            # link:
+            #     opentraffic:
+            #         data: { source: opentraffic }
+            #         draw:
+            #             ot-roads:
+            #                 order: 424 #10001
+
 
     # opentraffic:
     #     data: { source: opentraffic }
