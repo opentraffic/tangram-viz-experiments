@@ -19,16 +19,16 @@ scene:
 global:
 
     # Refill Global Colors -  BLACK
-    black_color:                [0.525,0.525,0.525]
+    black_color:            [0.525,0.525,0.525]
     dark_color:             [0.580,0.580,0.580]
     mid_color:              [0.722,0.722,0.722]
-    midlight_color:          [0.788,0.788,0.788]
+    midlight_color:         [0.788,0.788,0.788]
     light_color:            [0.824,0.824,0.824]
     lighter_color:          [0.894,0.894,0.894]
     lightest_color:         [0.929,0.929,0.929]
-    ultralight_color:           [0.965,0.965,0.965]
-    offwhite_color:             [0.976,0.976,0.976]
-    white_color:                [1.00,1.00,1.00]
+    ultralight_color:       [0.965,0.965,0.965]
+    offwhite_color:         [0.976,0.976,0.976]
+    white_color:            [1.000,1.000,1.000]
 
     sdk_traffic_overlay: true
 
