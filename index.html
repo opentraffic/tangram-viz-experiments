@@ -701,13 +701,12 @@
                 if (query.server) {
                     // Get the current boundaries of the displayed area on the map
                     var bbox = map.getBounds();
-                    var day = moment().format('YYYY-MM-DD')
-                    var hour = moment().format('HH:MM:SS')
+                    var day = "2016-01-01"; //moment().format('YYYY-MM-DD')
 
                     // Make the URL for OpenWeatherMaps API, asking for all stations inside that area (bounding box)
                     var url = 'https://'+query.server+'/query?';
-                    // url += '&start_date_time=' + day + 'T'+ moment().subtract(1,'month').format('HH:MM:SS');
-                    // url += '&end_date_time=' + day + 'T' + moment().format('HH:MM:SS');
+                    url += '&start_date_time=' + day + 'T07:00:00'; //moment().subtract(2,'hours').format('HH:MM:SS');
+                    url += '&end_date_time=' + day + 'T09:00:00'; //moment().format('HH:MM:SS');
                     url += '&boundingbox=' + bbox.getSouthWest().lng + ',' +bbox.getSouthWest().lat + ',' + bbox.getNorthEast().lng + ',' + bbox.getNorthEast().lat;
 
                     console.log('Query:',url);
