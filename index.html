@@ -544,7 +544,17 @@
                 'custom': 'custom'
             };
             // use query language, else default to English
-            gui.preset_date_range = query.preset_date_range || '2017-01-01-am-rush';
+            var custom_time_range_default = '2017-01-01-am-rush';
+            if( query ) {
+                if(query.start_date && query.start_time && query.end_date && query.end_time ) {
+                    custom_time_range_default = 'custom';
+                    time_range = { 'start_date':query.start_date,
+                                   'start_time':query.start_time,
+                                   'end_date':query.end_date,
+                                   'end_time':query.end_time };
+                }
+            }
+            gui.preset_date_range = query.preset_date_range || custom_time_range_default;
             gui.traffic_demo_timerange = gui.add(gui, 'preset_date_range', preset_date_range).onChange(function(value) {
                 if ( value == 'custom' ) {
                     time_range = { 'start_date':'2016-01-01', 'start_time':'T06:30:00', 'end_date':'2016-01-01', 'end_time':'T09:30:00' };
