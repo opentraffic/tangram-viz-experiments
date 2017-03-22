@@ -4,10 +4,10 @@
     - https://tangrams.github.io/blocks/functions/aastep.yaml
     - https://tangrams.github.io/blocks/generative/random.yaml
 
-# sources:
-#     opentraffic:
-#         type: GeoJSON
-#         url: assets/1-037-740.json
+sources:
+    opentraffic:
+        type: GeoJSON
+        url: assets/1-037-740.json
 
 textures:
     palette:
