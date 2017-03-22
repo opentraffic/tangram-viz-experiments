@@ -538,6 +538,7 @@
 
             // Preset date range selector
             var preset_date_range = {
+                '2016 Jan 1, AM early': '2017-01-01-early-am',
                 '2016 Jan 1, AM rush': '2017-01-01-am-rush',
                 '2016 Jan 1, NOON': '2017-01-01-noon-rush',
                 '2016 Jan 1, PM rush': '2017-01-01-pm-rush',
@@ -570,6 +571,8 @@
                      time_range = {'start_date':'2016-01-01', 'start_time':'T11:30:00', 'end_date':'2016-01-01', 'end_time':'T13:30:00' };
                 } else if ( value == '2017-01-01-pm-rush' ) {
                      time_range = {'start_date':'2016-01-01', 'start_time':'T15:00:00', 'end_date':'2016-01-01', 'end_time':'T18:00:00' };
+                } else if ( value == '2017-01-01-early-am' ) {
+                     time_range = {'start_date':'2016-01-01', 'start_time':'T03:00:00', 'end_date':'2016-01-01', 'end_time':'T06:00:00' };
                 // ( value == '2017-01-01-am-rush' ) {
                 } else {
                      time_range = { 'start_date':'2016-01-01', 'start_time':'T06:30:00', 'end_date':'2016-01-01', 'end_time':'T09:30:00' };
