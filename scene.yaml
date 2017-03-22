@@ -15,7 +15,7 @@ textures:
         filtering: nearest
 
 scene:
-    animated: true
+    animated: global.sdk_animated
 
 global:
     # Refill Global Colors -  BLACK
@@ -31,6 +31,7 @@ global:
     white_color:            [1.000,1.000,1.000]
 
     sdk_traffic_overlay: true
+    sdk_animated: true
 
 layers:
     _roads:
@@ -39,7 +40,7 @@ layers:
         draw:
             ot-roads:
                 order: 10001
-                width: [[6, 3px], [7, 3px], [11, 3px], [12, 4px], [15, 6px], [18, 10px], [19, 7m]]
+                width: [[6, 4px], [7, 6px], [10, 10px], [11, 10px], [12, 10px], [13, 12px], [15, 14px], [18, 16m]]
                 color: |
                     function () {
                         return [ (feature.speed || feature.speeds[0].average_speed)/100, feature.drive_on_right, feature.oneway ];
@@ -48,17 +49,17 @@ layers:
             filter: { best_frc: [primary] }
             draw:
                 ot-roads:
-                    width: [[6, 3px], [7, 3px], [11, 3px], [12, 4px], [15, 6px], [18, 10px], [19, 8m]]
+                    width: [[9, 0px], [10, 3px], [11, 6px], [12, 8px], [13, 10px],  [15, 12px], [18, 14m]]
         secondary:
             filter: { best_frc: [secondary] }
             draw:
                 ot-roads:
-                    width: [[8, 0px], [9, 2px], [11, 2px], [12, 3px], [15, 5px], [18, 9px], [19, 5m]]
+                    width: [[10, 0px], [11, 2px], [12, 6px], [13, 8px], [15, 10px], [18, 12m]]
         tertiary:
             filter: { best_frc: [tertiary] }
             draw:
                 ot-roads:
-                    width: [[9, 0px], [10, 1.5px], [11, 2px], [15, 4px], [18, 9px], [19, 4m]]
+                    width: [[11, 0px], [12, 3px], [13, 6px], [15, 8px], [18, 10m]]
 styles:
     ot-roads:
         base: lines
