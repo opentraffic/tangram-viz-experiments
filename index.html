@@ -503,18 +503,12 @@
             });
 
 			// Traffic selector
-			var traffic_overlay = {
-				'(default)': true,
-				'Show': true,
-				'Hide': false
-			};
-			// use path ux, else default to false
-			gui.traffic_overlay = query.traffic_overlay || true;
-			gui.traffic_button = gui.add(gui, 'traffic_overlay', traffic_overlay).onChange(function(value) {
+            var traffic_label = 'traffic';
+            gui[traffic_label] = true;
+			gui.add(gui, traffic_label).onChange(function(value) {
 				scene.config.global.sdk_traffic_overlay = (value === 'true' || value === true); // dat.gui passes a string
 				scene.updateConfig();
 			});
-			gui.traffic_button.name('traffic');
 
 
 //             // Animation selector
