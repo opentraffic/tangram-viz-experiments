@@ -30,10 +30,10 @@
         <!-- dev branch -->
         <!-- <script src="https://precog.mapzen.com/tangrams/tangram/placement-min-ratio/dist/tangram.debug.js"></script> -->
 
-		<!-- Fetch -->
-		<script type="text/javascript" src="https://rawgit.com/github/fetch/master/fetch.js"></script>
-		<!-- Moment -->
-		<script type="text/javascript" src="lib/moment.min.js"></script>
+        <!-- Fetch -->
+        <script type="text/javascript" src="https://rawgit.com/github/fetch/master/fetch.js"></script>
+        <!-- Moment -->
+        <script type="text/javascript" src="lib/moment.min.js"></script>
 
         <!-- A lightweight graphical user interface for changing variables in JavaScript.  -->
         <script type="text/javascript" src="lib/dat.gui.min.js"></script>
@@ -172,6 +172,11 @@
                 animated = false;
             }
         }
+        
+        var  time_range = { 'start_date':'2016-01-01',
+                            'start_time':'T06:30:00',
+                            'end_date':'2016-01-01',
+                            'end_time':'T09:30:00' }
 
         // location
         var url_hash = window.location.hash.slice(1).split('/');
@@ -502,14 +507,36 @@
                 //window.location.search = 'language=' + value;
             });
 
-			// Traffic selector
+            // Traffic selector
             var traffic_label = 'traffic';
             gui[traffic_label] = true;
-			gui.add(gui, traffic_label).onChange(function(value) {
-				scene.config.global.sdk_traffic_overlay = (value === 'true' || value === true); // dat.gui passes a string
-				scene.updateConfig();
-			});
+            gui.add(gui, traffic_label).onChange(function(value) {
+                scene.config.global.sdk_traffic_overlay = (value === 'true' || value === true); // dat.gui passes a string
+                scene.updateConfig();
+            });
 
+
+            // Preset date range selector
+            var preset_date_range = {
+                '2016 Jan 1, AM rush': '2017-01-01-am-rush',
+                '2016 Jan 1, NOON': '2017-01-01-noon-rush',
+                '2016 Jan 1, PM rush': '2017-01-01-pm-rush'
+            };
+            // use query language, else default to English
+            gui.preset_date_range = query.preset_date_range || '2017-01-01-am-rush';
+            gui.traffic_demo_timerange = gui.add(gui, 'preset_date_range', preset_date_range).onChange(function(value) {
+                if ( value == '2017-01-01-pm-rush' ) {
+                     time_range = {'start_date':'2016-01-01', 'start_time':'T15:00:00', 'end_date':'2016-01-01', 'end_time':'T18:00:00' };
+                } else if ( value == '2017-01-01-noon-rush' ) {
+                     time_range = {'start_date':'2016-01-01', 'start_time':'T11:30:00', 'end_date':'2016-01-01', 'end_time':'T13:30:00' };
+                // ( value == '2017-01-01-am-rush' ) {
+                } else {
+                     time_range = { 'start_date':'2016-01-01', 'start_time':'T06:30:00', 'end_date':'2016-01-01', 'end_time':'T09:30:00' };
+                }
+               
+                update(  time_range );
+            });
+            gui.traffic_demo_timerange.name('demo timerange');
 
 //             // Animation selector
 //             var animated = {
@@ -669,6 +696,45 @@
             }
         }
 
+        function update( time_range ) {
+            
+            if (query.server) {
+                // Get the current boundaries of the displayed area on the map
+                var bbox = map.getBounds();
+                
+                //moment().format('YYYY-MM-DD')
+                //console.log( time_range );
+
+                // Make the URL for OpenWeatherMaps API, asking for all stations inside that area (bounding box)
+                var url = 'https://'+query.server+'/query?';
+                url += '&start_date_time=' + time_range.start_date + time_range.start_time; //moment().subtract(2,'hours').format('HH:MM:SS');
+                url += '&end_date_time=' + time_range.start_date + time_range.end_time; //moment().format('HH:MM:SS');
+                url += '&boundingbox=' + bbox.getSouthWest().lng + ',' +bbox.getSouthWest().lat + ',' + bbox.getNorthEast().lng + ',' + bbox.getNorthEast().lat;
+
+                console.log('Query:',url);
+                // Make the request and wait for the reply
+                fetch(url)
+                    .then(function (response) {
+                        // If we get a positive response...
+                        if (response.status !== 200) {
+                            console.log('Error getting data: ' + response.status);
+                            return;
+                        }
+                        // ... parse it to JSON
+                        return response.json();
+                    })
+                    .then(function(json) {
+                        console.log(json);
+
+                        // Pass the POIs as a GeoJSON FeaturesCollection to tangram
+                        scene.setDataSource('opentraffic', {type: 'GeoJSON', data: json});
+                    })
+                    .catch(function(error) {
+                        console.log('Error parsing the GeoJSON.', error)
+                    })
+            }
+        }
+
         // Add map
         window.addEventListener('load', function () {
             // Scene initialized
@@ -693,47 +759,9 @@
             // Note: a debounce function is use to prevent multiple calls to OpenWeatherMaps api
             map.on('moveend', debounce(function() {
                 // Update the displayed information
-                update();
+                update( time_range );
             }, 1000));
             
-            function update() {
-
-                if (query.server) {
-                    // Get the current boundaries of the displayed area on the map
-                    var bbox = map.getBounds();
-                    var day = "2016-01-01"; //moment().format('YYYY-MM-DD')
-
-                    // Make the URL for OpenWeatherMaps API, asking for all stations inside that area (bounding box)
-                    var url = 'https://'+query.server+'/query?';
-                    url += '&start_date_time=' + day + 'T07:00:00'; //moment().subtract(2,'hours').format('HH:MM:SS');
-                    url += '&end_date_time=' + day + 'T09:00:00'; //moment().format('HH:MM:SS');
-                    url += '&boundingbox=' + bbox.getSouthWest().lng + ',' +bbox.getSouthWest().lat + ',' + bbox.getNorthEast().lng + ',' + bbox.getNorthEast().lat;
-
-                    console.log('Query:',url);
-                    // Make the request and wait for the reply
-                    fetch(url)
-                        .then(function (response) {
-                            // If we get a positive response...
-                            if (response.status !== 200) {
-                                console.log('Error getting data: ' + response.status);
-                                return;
-                            }
-                            // ... parse it to JSON
-                            return response.json();
-                        })
-                        .then(function(json) {
-                            console.log(json);
-
-                            // Pass the POIs as a GeoJSON FeaturesCollection to tangram
-                            scene.setDataSource('opentraffic', {type: 'GeoJSON', data: json});
-                        })
-                        .catch(function(error) {
-                            console.log('Error parsing the GeoJSON.', error)
-                        })
-                }
-                
-            }
-
 
             // ============================================= Some Helper functions
             function debounce(func, wait, immediate) {
