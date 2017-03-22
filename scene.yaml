@@ -19,8 +19,8 @@ scene:
 global:
 
     # Refill Global Colors -  BLACK
-    black_color:            [0.525,0.525,0.525]
-    dark_color:             [0.580,0.580,0.580]
+    black_color:            [0.650,0.650,0.650] #[0.525,0.525,0.525]
+    dark_color:             [0.680,0.680,0.680] #[0.580,0.580,0.580]
     mid_color:              [0.722,0.722,0.722]
     midlight_color:         [0.788,0.788,0.788]
     light_color:            [0.824,0.824,0.824]
@@ -60,7 +60,7 @@ layers:
         draw:
             ot-roads:
                 order: 10001
-                width: [[10,2px],[15,5px],[20,5m]]
+                width: [[6, 3px], [7, 3px], [11, 3px], [12, 4px], [15, 6px], [18, 10px], [19, 7m]]
                 color: |
                     function () {
                         return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
@@ -70,7 +70,7 @@ layers:
             filter: { best_frc: [secondary] }
             draw:
                 ot-roads:
-                    width: [[10, 0.5px], [12, 0.5px], [14, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+                    width: [[8, 0px], [9, 2px], [11, 2px], [12, 3px], [15, 5px], [18, 9px], [19, 6m]]
                     color: |
                         function () {
                             return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
@@ -81,7 +81,7 @@ layers:
             filter: { best_frc: [tertiary] }
             draw:
                 ot-roads:
-                    width: [[11, 0.5px], [15, 1px], [16, 2px], [17, 3px], [18, 4px], [19, 8px]]
+                    width: [[9, 0px], [10, 1.5px], [11, 2px], [15, 4px], [18, 9px], [19, 5m]]
                     color: |
                         function () {
                             return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
