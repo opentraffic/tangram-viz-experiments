@@ -540,15 +540,26 @@
             var preset_date_range = {
                 '2016 Jan 1, AM rush': '2017-01-01-am-rush',
                 '2016 Jan 1, NOON': '2017-01-01-noon-rush',
-                '2016 Jan 1, PM rush': '2017-01-01-pm-rush'
+                '2016 Jan 1, PM rush': '2017-01-01-pm-rush',
+                'custom': 'custom'
             };
             // use query language, else default to English
             gui.preset_date_range = query.preset_date_range || '2017-01-01-am-rush';
             gui.traffic_demo_timerange = gui.add(gui, 'preset_date_range', preset_date_range).onChange(function(value) {
-                if ( value == '2017-01-01-pm-rush' ) {
-                     time_range = {'start_date':'2016-01-01', 'start_time':'T15:00:00', 'end_date':'2016-01-01', 'end_time':'T18:00:00' };
+                if ( value == 'custom' ) {
+                    time_range = { 'start_date':'2016-01-01', 'start_time':'T06:30:00', 'end_date':'2016-01-01', 'end_time':'T09:30:00' };
+                    if( query ) {
+                        if(query.start_date && query.start_time && query.end_date && query.end_time ) {
+                            time_range = { 'start_date':query.start_date,
+                                           'start_time':query.start_time,
+                                           'end_date':query.end_date,
+                                           'end_time':query.end_time }
+                        }
+                    }
                 } else if ( value == '2017-01-01-noon-rush' ) {
                      time_range = {'start_date':'2016-01-01', 'start_time':'T11:30:00', 'end_date':'2016-01-01', 'end_time':'T13:30:00' };
+                } else if ( value == '2017-01-01-pm-rush' ) {
+                     time_range = {'start_date':'2016-01-01', 'start_time':'T15:00:00', 'end_date':'2016-01-01', 'end_time':'T18:00:00' };
                 // ( value == '2017-01-01-am-rush' ) {
                 } else {
                      time_range = { 'start_date':'2016-01-01', 'start_time':'T06:30:00', 'end_date':'2016-01-01', 'end_time':'T09:30:00' };
@@ -721,15 +732,15 @@
 
                 //console.log( query )
 
-                if(query.start_date && query.start_time) {
-                    url += '&start_date_time=' + query.start_date + query.start_time;
+                if(gui.traffic_demo_timerange.value == 'custom') {
+                    if(query.start_date && query.start_time) {
+                        url += '&start_date_time=' + query.start_date + query.start_time;
+                    }
+                    if(query.end_date && query.end_time) {
+                        url += '&end_date_time=' + query.end_date + query.end_time;
+                    }
                 } else {
                     url += '&start_date_time=' + time_range.start_date + time_range.start_time;
-                }
-
-                if(query.end_date && query.end_time) {
-                    url += '&end_date_time=' + query.end_date + query.end_time;
-                } else {
                     url += '&end_date_time=' + time_range.end_date + time_range.end_time;
                 }
 
