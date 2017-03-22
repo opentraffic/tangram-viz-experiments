@@ -32,7 +32,6 @@ global:
     sdk_traffic_overlay: true
 
 layers:
-
     _roads:
         visible: global.sdk_traffic_overlay
         data: { source: opentraffic }
@@ -44,27 +43,16 @@ layers:
                     function () {
                         return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
                     }
-
         secondary:
             filter: { best_frc: [secondary] }
             draw:
                 ot-roads:
-                    width: [[8, 0px], [9, 2px], [11, 2px], [12, 3px], [15, 5px], [18, 9px], [19, 6m]]
-                    color: |
-                        function () {
-                            return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-                        }
-
-
+                    width: [[8, 0px], [9, 2px], [11, 2px], [12, 3px], [15, 5px], [18, 9px], [19, 4m]]
         tertiary:
             filter: { best_frc: [tertiary] }
             draw:
                 ot-roads:
-                    width: [[9, 0px], [10, 1.5px], [11, 2px], [15, 4px], [18, 9px], [19, 5m]]
-                    color: |
-                        function () {
-                            return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-                        }
+                    width: [[9, 0px], [10, 1.5px], [11, 2px], [15, 4px], [18, 9px], [19, 4m]]
 styles:
     ot-roads:
         base: lines
@@ -74,7 +62,7 @@ styles:
         blend: inlay
         shaders:
             defines:
-                ZOOM_START: 15.
+                ZOOM_START: 18.
                 ZOOM_END: 20.
                 ZOOM_IN: .0
                 ZOOM_OUT: .5
@@ -83,18 +71,20 @@ styles:
             blocks:
                 width: |
                     // One or two lanes
-                    width = mix(width*v_texcoord.x, width, a_color.b);
+                    width *= v_texcoord.x;
+                    //width = mix(width*v_texcoord.x, width, a_color.b);
                 color: |
                     // Speed to color from palette LUT
                     color = texture2D(u_palette, vec2(smoothstep(0.,.3,v_color.r),.5));
 
-                    
-                    vec2 st = v_texcoord.xy+vec2(.5,0.);
+                    // Scale down the road x2
+                    vec2 st = fract(v_texcoord.xy*2.)+vec2(.5,0.);
                     // Flip direction if the the drive is not on the right.
                     st.y = mix(st.y,1.-fract(st.y),v_color.g);
                     // Adjust the speed to the speed
                     st.y -= u_time*10.*v_color.r;
-                    // Make chrevone arrow
-                    color.a *= aastep(zoom(),fract(st.y+abs(st.x*.5-.5)));
+                    // Make chrevone arrow just in the second line
+                    color.a *= min(floor(v_texcoord.x*2.), 
+                                    aastep(zoom(),fract(st.y+abs(st.x*.5-.5))));
 
 
