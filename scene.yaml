@@ -4,14 +4,15 @@
     - https://tangrams.github.io/blocks/functions/aastep.yaml
     - https://tangrams.github.io/blocks/generative/random.yaml
 
-sources:
-    opentraffic:
-        type: GeoJSON
-        url: assets/1-037-740.json
+# sources:
+#     opentraffic:
+#         type: GeoJSON
+#         url: assets/1-037-740.json
 
 textures:
     palette:
         url: assets/ot-traffic.png
+        filtering: nearest
 
 scene:
     animated: true
@@ -41,13 +42,18 @@ layers:
                 width: [[6, 3px], [7, 3px], [11, 3px], [12, 4px], [15, 6px], [18, 10px], [19, 7m]]
                 color: |
                     function () {
-                        return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
+                        return [ (feature.speed || feature.speeds[0].average_speed)/255, feature.drive_on_right, feature.oneway ];
                     }
+        primary:
+            filter: { best_frc: [primary] }
+            draw:
+                ot-roads:
+                    width: [[6, 3px], [7, 3px], [11, 3px], [12, 4px], [15, 6px], [18, 10px], [19, 8m]]
         secondary:
             filter: { best_frc: [secondary] }
             draw:
                 ot-roads:
-                    width: [[8, 0px], [9, 2px], [11, 2px], [12, 3px], [15, 5px], [18, 9px], [19, 4m]]
+                    width: [[8, 0px], [9, 2px], [11, 2px], [12, 3px], [15, 5px], [18, 9px], [19, 5m]]
         tertiary:
             filter: { best_frc: [tertiary] }
             draw:

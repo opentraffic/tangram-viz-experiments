@@ -704,34 +704,32 @@
                 var hour = moment().format('HH:MM:SS')
 
                 // Make the URL for OpenWeatherMaps API, asking for all stations inside that area (bounding box)
-                var url = 'https://localhost:3000/query?';
-                url += '&start_date_time=' + day + 'T'+ moment().subtract(1,'hour').format('HH:MM:SS');
-                url += '&end_date_time=' + day + 'T' + moment().format('HH:MM:SS');
+                var url = 'https://api-dev.opentraffic.io/query?';
+                // url += '&start_date_time=' + day + 'T'+ moment().subtract(1,'month').format('HH:MM:SS');
+                // url += '&end_date_time=' + day + 'T' + moment().format('HH:MM:SS');
                 url += '&boundingbox=' + bbox.getSouthWest().lng + ',' +bbox.getSouthWest().lat + ',' + bbox.getNorthEast().lng + ',' + bbox.getNorthEast().lat;
 
-                console.log('Fake call to:', url);
+                console.log('Query:',url);
+                // Make the request and wait for the reply
+                fetch(url)
+                    .then(function (response) {
+                        // If we get a positive response...
+                        if (response.status !== 200) {
+                            console.log('Error getting data: ' + response.status);
+                            return;
+                        }
+                        // ... parse it to JSON
+                        return response.json();
+                    })
+                    .then(function(json) {
+                        console.log(json);
 
-                // // Make the request and wait for the reply
-                // fetch(url)
-                //     .then(function (response) {
-                //         // If we get a positive response...
-                //         if (response.status !== 200) {
-                //             console.log('Error getting data: ' + response.status);
-                //             return;
-                //         }
-                //         // ... parse it to JSON
-                //         return response.json();
-                //     })
-                //     .then(function(json) {
-                //         var data = { " opentraffic": json };
-                //         console.log(data);
-
-                //         // Pass the POIs as a GeoJSON FeaturesCollection to tangram
-                //         scene.setDataSource('opentraffic', {type: 'GeoJSON', data: json});
-                //     })
-                //     .catch(function(error) {
-                //         console.log('Error parsing the GeoJSON.', error)
-                //     })
+                        // Pass the POIs as a GeoJSON FeaturesCollection to tangram
+                        scene.setDataSource('opentraffic', {type: 'GeoJSON', data: json});
+                    })
+                    .catch(function(error) {
+                        console.log('Error parsing the GeoJSON.', error)
+                    })
             }
 
 
