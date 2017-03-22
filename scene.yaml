@@ -11,13 +11,12 @@ sources:
 
 textures:
     palette:
-        url: assets/palette-01.png
+        url: assets/ot-traffic.png
 
 scene:
     animated: true
 
 global:
-
     # Refill Global Colors -  BLACK
     black_color:            [0.650,0.650,0.650] #[0.525,0.525,0.525]
     dark_color:             [0.680,0.680,0.680] #[0.580,0.580,0.580]
@@ -31,26 +30,6 @@ global:
     white_color:            [1.000,1.000,1.000]
 
     sdk_traffic_overlay: true
-
-    # COLORS
-    traffic_tier1_fast_color: green
-    traffic_tier2_medium_color: blue
-    traffic_tier3_slow_color: orange
-    traffic_tier4_stop_color: red
-
-    # FILTERS
-    traffic_tier1_fast_filter:
-        all:
-            - function() { return feature.speed >= 40; }
-    traffic_tier2_medium_filter:
-        all:
-            - function() { return feature.speed < 40; }
-    traffic_tier3_slow_filter:
-        all:
-            - function() { return feature.speed < 20; }
-    traffic_tier4_stop_filter:
-        all:
-            - function() { return feature.speed < 5; }
 
 layers:
 
@@ -86,18 +65,6 @@ layers:
                         function () {
                             return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
                         }
-
-    # opentraffic:
-    #     data: { source: opentraffic }
-    #     draw:
-    #         ot-roads:
-    #             order: 10002
-    #             width: [[10,2px],[15,5px],[20,5m]]
-    #             color: |
-    #                 function () {
-    #                     return [ feature.speed/255, feature.drive_on_right, feature.oneway ];
-    #                 }
-
 styles:
     ot-roads:
         base: lines
