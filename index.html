@@ -504,6 +504,19 @@
                 //window.location.search = 'language=' + value;
             });
 
+            // Animation selector
+            var animated = {
+                '(default)': true,
+                'Yes': true,
+                'No': false
+            };
+            gui.animated = query.animated || true;
+            gui.add(gui, 'animated', animated).onChange(function(value) {
+                scene.config.global.sdk_animated = (value === 'true' || value === true); // dat.gui passes a string
+                scene.updateConfig();
+                //window.location.search = 'animated=' + value;
+            });
+
             // Traffic selector
             var traffic_label = 'traffic';
             gui[traffic_label] = true;
@@ -534,19 +547,6 @@
                 update(  time_range );
             });
             gui.traffic_demo_timerange.name('demo timerange');
-
-//             // Animation selector
-//             var animated = {
-//                 '(default)': true,
-//                 'Yes': true,
-//                 'No': false
-//             };
-//             gui.animated = query.animated || true;
-//             gui.add(gui, 'animated', animated).onChange(function(value) {
-//                 scene.config.global.sdk_animated = (value === 'true' || value === true); // dat.gui passes a string
-//                 scene.updateConfig();
-//                 //window.location.search = 'animated=' + value;
-//             });
 
             // Enable/disable interactivity for all features
             var interactive_label = 'interactive';
