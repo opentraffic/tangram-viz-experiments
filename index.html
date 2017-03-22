@@ -698,7 +698,7 @@
             var legend = L.control({position: 'bottomleft'});
             legend.onAdd = function (map) {
               var div = L.DomUtil.create('div', 'Legend');
-              div.innerHTML = "<div id='map_legend'><img alt='Traffic Legend: GREEN ≥ 80 km/hr; YELLOW ≥ 50 and < 80; RED ≥ 25 and < 50; DARK RED < 25' src='https://cloud.githubusercontent.com/assets/853051/24221165/711d06c8-0f0a-11e7-89ef-f69b18c354fa.png' width='183' height='160'></div>";
+              div.innerHTML = "<div id='map_legend'><a href='' title='Traffic Legend: GREEN ≥ 80 km/hr; ORANGE ≥ 50 and < 80 km/hr; RED ≥ 25 and < 50 km/hr; DARK RED < 25 km/hr'><img alt='Traffic Legend: GREEN ≥ 80 km/hr; ORANGE ≥ 50 and < 80; RED ≥ 25 and < 50; DARK RED < 25' src='https://cloud.githubusercontent.com/assets/853051/24221165/711d06c8-0f0a-11e7-89ef-f69b18c354fa.png' width='183' height='160'></a></div>";
               return div;
             };
             legend.addTo(map);
