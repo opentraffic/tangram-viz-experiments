@@ -31,6 +31,22 @@ global:
     ultralight_color:       [0.965,0.965,0.965]
     offwhite_color:         [0.976,0.976,0.976]
     white_color:            [1.000,1.000,1.000]
+    
+    ot_color_fast: |
+        function () {
+            var average = 60; // KM
+            return [ (feature.speed || feature.speeds[0].average_speed)/100, average/100, feature.drive_on_right];
+        }
+    ot_color_medium: |
+        function () {
+            var average = 40; // KM
+            return [ (feature.speed || feature.speeds[0].average_speed)/100, average/100, feature.drive_on_right];
+        }
+    ot_color_slow: |
+        function () {
+            var average = 20; // KM
+            return [ (feature.speed || feature.speeds[0].average_speed)/100, average/100, feature.drive_on_right];
+        }
 
     sdk_traffic_overlay: true
     sdk_animated: true
@@ -41,27 +57,51 @@ layers:
         data: { source: opentraffic }
         draw:
             ot-roads:
+                width: [[9, 0px], [10, 3px], [11, 6px], [12, 8px], [13, 10px],  [15, 12px], [18, 14m]]
                 order: 10001
-                width: [[6, 4px], [7, 6px], [10, 10px], [11, 10px], [12, 10px], [13, 12px], [15, 14px], [18, 16m]]
-                color: |
-                    function () {
-                        return [ (feature.speed || feature.speeds[0].average_speed)/100, feature.drive_on_right, feature.oneway ];
-                    }
+                color: global.ot_color_fast
+        motorway:
+            filter: { best_frc: [motorway] }
+            draw:
+                ot-roads:
+                    width: [[9, 0px], [10, 3px], [11, 6px], [12, 8px], [13, 10px],  [15, 12px], [18, 14m]]
+                    order: 10001
+                    color: global.ot_color_fast
+        trunk:
+            filter: { best_frc: [trunk] }
+            draw:
+                ot-roads:
+                    width: [[9, 0px], [10, 3px], [11, 6px], [12, 8px], [13, 10px],  [15, 12px], [18, 14m]]
+                    order: 10001
+                    color: global.ot_color_fast
         primary:
             filter: { best_frc: [primary] }
             draw:
                 ot-roads:
                     width: [[9, 0px], [10, 3px], [11, 6px], [12, 8px], [13, 10px],  [15, 12px], [18, 14m]]
+                    order: 10001
+                    color: global.ot_color_medium
         secondary:
             filter: { best_frc: [secondary] }
             draw:
                 ot-roads:
                     width: [[10, 0px], [11, 2px], [12, 6px], [13, 8px], [15, 10px], [18, 12m]]
+                    order: 10001
+                    color: global.ot_color_medium
         tertiary:
             filter: { best_frc: [tertiary] }
             draw:
                 ot-roads:
                     width: [[11, 0px], [12, 3px], [13, 6px], [15, 8px], [18, 10m]]
+                    order: 10001
+                    color: global.ot_color_medium
+        residential:
+            filter: { best_frc: [residential] }
+            draw:
+                ot-roads:
+                    width: [[11, 0px], [12, 3px], [13, 6px], [15, 8px], [18, 10m]]
+                    order: 10001
+                    color: global.ot_color_slow
 styles:
     ot-roads:
         base: lines
@@ -81,17 +121,18 @@ styles:
                 width: |
                     // One or two lanes
                     width *= v_texcoord.x;
-                    //width = mix(width*v_texcoord.x, width, a_color.b);
                 color: |
-                    // Speed to color from palette LUT
-                    color = texture2D(u_palette, vec2(clamp(v_color.r,0.,1.),.5));
+                    // Delta Speed to color from palette LUT (speed - average)
+                    color = texture2D(u_palette, vec2(clamp(.5+(v_color.r-v_color.g),0.,1.),.5));
 
                     // Scale down the road x2
                     vec2 st = fract(v_texcoord.xy*2.)+vec2(.5,0.);
                     // Flip direction if the the drive is not on the right.
-                    st.y = mix(st.y,1.-fract(st.y),v_color.g);
-                    // Adjust the speed to the speed
+                    st.y = mix(st.y,1.-fract(st.y),v_color.b);
+
+                    // Speed to animation speed
                     st.y -= u_time*5.*v_color.r;
+
                     // Make chrevone arrow just in the second line
                     color.a *= min(floor(v_texcoord.x*2.), 
                                     aastep(zoom(),fract(st.y+abs(st.x*.5-.5))));
