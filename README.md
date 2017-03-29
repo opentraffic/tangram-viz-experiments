@@ -1,7 +1,12 @@
+ ## Open Traffic ~ Tangram Demo
 
+To use against a live [OTv2 API](https://github.com/opentraffic/api), you will need to specify two query parameters:
 
- ## OpenTraffic ~ Tangram Demo
- 
+- `server` - hostname for the API
+- `secret_key` - to authenticate against the API
+
+For example: `http://opentraffic.io/tangram-viz-experiments/?server=host.opentraffic.io&secret=password`
+
  ### How does it work?
  
  The pipeline for this is:
