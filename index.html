@@ -742,6 +742,9 @@
                 // Get the current boundaries of the displayed area on the map
                 var bbox = map.getBounds();
                 var url = 'https://'+query.server+'/query?';
+                if (query.secret_key) {
+                    url = url + 'secret_key=' + query.secret_key + '&';
+                }
 
                 //console.log( query )
 
