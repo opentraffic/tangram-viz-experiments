@@ -1,11 +1,20 @@
  ## Open Traffic ~ Tangram Demo
 
+This map can be used in two ways: against a live API or against a local cached copy of a GeoJSON extract.
+
 To use against a live [OTv2 API](https://github.com/opentraffic/api), you will need to specify two query parameters:
 
 - `server` - hostname for the API
 - `secret_key` - to authenticate against the API
 
 For example: `http://opentraffic.io/tangram-viz-experiments/?server=host.opentraffic.io&secret=password`
+
+To use against a local cached copy of a GeoJSON extract:
+
+1. Construct a query to the OTv2 API using [the available query parameters](https://github.com/opentraffic/api/blob/dev/py/query.py#L8-L21).
+2. Save the response as a `.geojson` file to a local copy of this repository.
+3. Update the data source within the Tangram scene file to reference that file: [scene.yaml#L9-L12](https://github.com/opentraffic/tangram-viz-experiments/blob/gh-pages/scene.yaml#L9-L12)
+4. Update the initial map start position: [index.html#L190](https://github.com/opentraffic/tangram-viz-experiments/blob/gh-pages/index.html#L190)
 
  ### How does it work?
  
